@@ -7,7 +7,7 @@ class Parametrs {
     static illTime;
     static allMasks;
     static privito;
-    static people = 5000;
+    static people = 50;
 }
 class Changes {
     static changeMasksIll = 10;
