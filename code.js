@@ -23,7 +23,7 @@ class Point {
     static ballsCounter = 0;  // счетчик шаров
     static illCounter = 0;  // счетчик заболевших
     static deathCounter = 0;  // счетчик умерших
-    static aliveCounter = 50;
+    static aliveCounter = Parametrs.people;
     counterVer2 = 0;  // производственная переменная для изменения направления
     static counterVer3 = 0;  // производственная переменная для подсчета вероятности
     counterVer4 = 0;  // производственная переменная для подсчета смерть/выздоровление
@@ -103,6 +103,7 @@ class Point {
             else {
                 this.ill = false;
                 Point.illCounter--;
+                Point.aliveCounter += 1;
                 this.color = "#FF66FF";
             }
          }
@@ -123,24 +124,26 @@ start.onclick = function() {
         graphik(second);
     }, 2000);
 }
-var massiv = [['Секунда', 'Количество зараженных']];
-var massiv2 = [['Секунда', 'Количество смертей']];
-var massiv3 = [['Кол-во', 'Здоровые'], ['Кол-во2', 'Мертвые'], ['Кол-во3', 'Зараженные']]
+var massiv = [['Секунда', 'Процент зараженных']];
+var massiv2 = [['Секунда', 'Процент мертвых']];
+var massiv3 = [['Секунда', 'Процент здоровых']];
 
 function graphik(second){
     google.charts.load('current', {'packages':['corechart', 'line']});
       google.charts.setOnLoadCallback(drawFirstChart);
       google.charts.setOnLoadCallback(drawSecondChart);
       google.charts.setOnLoadCallback(drawPieChart);
+      google.charts.setOnLoadCallback(drawThirdChart);
 
-      massiv.push([second, Point.illCounter]);
-      massiv2.push([second, Point.deathCounter]);
+      massiv.push([second, (Point.illCounter * 100) / (Parametrs.people + 1)]);
+      massiv2.push([second, (Point.deathCounter * 100) / (Parametrs.people + 1)]);
+      massiv3.push([second, (Point.aliveCounter * 100) / (Parametrs.people + 1)]);
 
       function drawFirstChart() {
         var data = google.visualization.arrayToDataTable(massiv);
 
         var options = {
-          title: 'Статистика заражения',
+          title: 'Процент зараженных',
           legend: { position: 'bottom' }
         };
 
@@ -153,7 +156,7 @@ function graphik(second){
         var data = google.visualization.arrayToDataTable(massiv2);
 
         var options = {
-          title: 'Статистика смертей',
+          title: 'Процент мертвых',
           legend: { position: 'bottom' }
         };
 
@@ -179,6 +182,19 @@ function graphik(second){
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
+        chart.draw(data, options);
+      }
+
+      function drawThirdChart() {
+        var data = google.visualization.arrayToDataTable(massiv3);
+
+        var options = {
+          title: 'Процент здоровых',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('third_curve_chart'));
+
         chart.draw(data, options);
       }
 }
