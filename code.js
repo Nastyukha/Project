@@ -8,6 +8,8 @@ class Parametrs {
     static allMasks;
     static privito;
     static people = 50;
+    static latentPeriod;
+    static imunTime;
 }
 class Changes {
     static changeMasksIll = 10;
@@ -18,6 +20,7 @@ class Point {
     masks = false;
     vacine = false;
     startIll;  // начало болезни
+    startImun;
     beIllChance = Parametrs.illChance;
     beDeathChance = Parametrs.deathChance;
     static ballsCounter = 0;  // счетчик шаров
@@ -71,14 +74,26 @@ class Point {
         this.drawBall();
     }
 
-    makeIll() {  // метод заболел/заразил
+    makeIll(inkub) {  // метод заболел/заразил
+        let nowTime = new Date().getTime();
         Point.counterVer3 = Math.floor(Math.random() * (100 - 1)) + 1;
-        if (Point.counterVer3 <= this.beIllChance){
-            this.ill = true;
-            Point.illCounter++;
-            this.color = "blue";  // цвет зараженного шарика
-            this.startIll = new Date().getTime();
-            Point.aliveCounter -= 1;
+        if (Point.counterVer3 <= this.beIllChance && nowTime / 1000 - inkub.startIll / 1000 <= Parametrs.latentPeriod){
+            if (this.color == "#FF66FF"){
+                if (nowTime / 1000 - this.startImun / 1000 >= Parametrs.imunTime){
+                    this.ill = true;
+                    Point.illCounter++;
+                    this.color = "blue";  // цвет зараженного шарика
+                    this.startIll = new Date().getTime();
+                    Point.aliveCounter -= 1;
+                }
+            }
+            else{
+                this.ill = true;
+                Point.illCounter++;
+                this.color = "blue";  // цвет зараженного шарика
+                this.startIll = new Date().getTime();
+                Point.aliveCounter -= 1;
+            }
         }
     }
 
@@ -105,6 +120,7 @@ class Point {
                 Point.illCounter--;
                 Point.aliveCounter += 1;
                 this.color = "#FF66FF";
+                this.startImun = new Date().getTime();
             }
          }
     }
@@ -114,8 +130,10 @@ start.onclick = function() {
     Parametrs.illChance = parseInt(document.getElementById("chanceIll").value);
     Parametrs.deathChance = parseInt(document.getElementById("chanceDeath").value);
     Parametrs.illTime = parseInt(document.getElementById("timeIll").value);
+    Parametrs.latentPeriod = parseInt(document.getElementById("periodLatent").value);
     Parametrs.allMasks = parseInt(document.getElementById("masksOnAll").value);
     Parametrs.privito = parseInt(document.getElementById("vacine").value);
+    Parametrs.imunTime = parseInt(document.getElementById("timeImun").value);
     standart();
     graphik();
     var second = 0;
@@ -177,8 +195,6 @@ function graphik(second){
 
         var options = {
           'title': 'Соотношение',
-          'width': 500,
-          'height': 500
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
@@ -237,10 +253,10 @@ function standart() {
             for (let n of balls){
               if (Math.abs(p.x - n.x) <= Parametrs.illRadius && Math.abs(p.y - n.y) <= Parametrs.illRadius && p != n){  // проверяем касание с радиусом заражения
                 if (p.ill == true && n.ill != true){  // проверяем есть ли при касании зараженные
-                  n.makeIll();
+                  n.makeIll(p);
                 }
                 if (p.ill != true && n.ill == true){  // проверяем есть ли при касании зараженные
-                  p.makeIll();
+                  p.makeIll(n);
                 }
               }
             }
