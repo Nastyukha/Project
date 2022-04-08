@@ -125,7 +125,10 @@ class Point {
          }
     }
 }
-start.onclick = function() {
+var firstButton = document.getElementById("start");
+var secondButton = document.getElementById("finish");
+var graphikInterval;
+firstButton.onclick = function() {
     Parametrs.illRadius = parseInt(document.getElementById("radIll").value);
     Parametrs.illChance = parseInt(document.getElementById("chanceIll").value);
     Parametrs.deathChance = parseInt(document.getElementById("chanceDeath").value);
@@ -137,10 +140,19 @@ start.onclick = function() {
     standart();
     graphik();
     var second = 0;
-    setInterval(()=>{
+    graphikInterval = setInterval(()=>{
         second = second + 2;
         graphik(second);
     }, 2000);
+    firstButton.disabled = true;
+    secondButton.disabled = false;
+}
+secondButton.onclick = function() {
+    clearInterval(graphikInterval);
+    clearInterval(firstInterval);
+    clearInterval(secondInterval);
+    console.log(1);
+    secondButton.disabled = true;
 }
 var massiv = [['Секунда', 'Процент зараженных']];
 var massiv2 = [['Секунда', 'Процент мертвых']];
@@ -214,6 +226,8 @@ function graphik(second){
         chart.draw(data, options);
       }
 }
+var firstInterval;
+var secondInterval;
 function standart() {
     let balls = []  // список шаров на экране
     // заполняем список
@@ -243,7 +257,7 @@ function standart() {
     ballIll.color = "blue";  // цвет зараженного шарика
     ballIll.startIll = new Date().getTime();
     balls.push(ballIll);  // добавляем его в список
-    setInterval(()=>{
+    firstInterval = setInterval(()=>{
         ctx.clearRect(0, 0, canvas.width, canvas.height);  // очищаем экран
         for (let p of balls){
           if (p.ill == true){
@@ -262,7 +276,7 @@ function standart() {
             }
         }
         } ,10)
-    setInterval(()=>{  // изменяем направление (рандомно)
+    secondInterval = setInterval(()=>{  // изменяем направление (рандомно)
         for (let p of balls){
             p.change();
         }
