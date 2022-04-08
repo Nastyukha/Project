@@ -1,6 +1,7 @@
-html {
+body {
     background: linear-gradient(#6666FF, #FF99FF);
-    margin-left: 20px;
+    margin-left: 20px; /*отступ слева*/
+    margin-right: 20px; /*отступ справа*/
 }
 hi {
     font-size: 40px;
@@ -23,15 +24,9 @@ input {
     background-color: #CCCCFF;
     width: 300px;
 }
-body {
-    padding: 0;
-    margin: 0;
-}
 #myCanvas {
     background-color: #CCCCFF;
     border: 1px solid black;
-    display: block;
-    margin: 0 auto;
 }
 .column {
     float: left;
@@ -42,4 +37,9 @@ body {
 
 .right {
     width: 50%;
+}
+#second_curve_chart, #first_curve_chart, #third_curve_chart, #pie_chart {
+    height: 500px;
+    margin-top: 20px; /*отступ сверху*/
+    margin-bottom: 20px; /*отступ снизу*/
 }
