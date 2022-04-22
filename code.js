@@ -10,6 +10,7 @@ class Parametrs {
     static people = 50;
     static latentPeriod;
     static imunTime;
+    static newBallRadius = 1;
 }
 class Changes {
     static changeMasksIll = 10;
@@ -78,7 +79,7 @@ class Point {
         let nowTime = new Date().getTime();
         Point.counterVer3 = Math.floor(Math.random() * (100 - 1)) + 1;
         if (Point.counterVer3 <= this.beIllChance && nowTime / 1000 - inkub.startIll / 1000 <= Parametrs.latentPeriod){
-            if (this.color == "#FF66FF"){
+            if (this.color == "#CC99FF"){
                 if (nowTime / 1000 - this.startImun / 1000 >= Parametrs.imunTime){
                     this.ill = true;
                     Point.illCounter++;
@@ -119,7 +120,7 @@ class Point {
                 this.ill = false;
                 Point.illCounter--;
                 Point.aliveCounter += 1;
-                this.color = "#FF66FF";
+                this.color = "#CC99FF";
                 this.startImun = new Date().getTime();
             }
          }
@@ -236,22 +237,22 @@ function standart() {
         let ver2 = Math.floor(Math.random() * (100 - 1)) + 1;
         if (ver <= Parametrs.allMasks){
             if (ver2 <= Parametrs.privito){
-                balls.push(new Point(3, true, true));
+                balls.push(new Point(Parametrs.newBallRadius, true, true));
             }
             else{
-                balls.push(new Point(3, true, false));
+                balls.push(new Point(Parametrs.newBallRadius, true, false));
             }
         }
         else{
             if (ver2 <= Parametrs.privito){
-                balls.push(new Point(3, false, true));
+                balls.push(new Point(Parametrs.newBallRadius, false, true));
             }
             else{
-                balls.push(new Point(3, false, false));
+                balls.push(new Point(Parametrs.newBallRadius, false, false));
             }
         }
     }
-    let ballIll = new Point(3, false);  // создаем зараженный шарик
+    let ballIll = new Point(Parametrs.newBallRadius, false);  // создаем зараженный шарик
     ballIll.ill = true;
     Point.illCounter++;
     ballIll.color = "blue";  // цвет зараженного шарика
